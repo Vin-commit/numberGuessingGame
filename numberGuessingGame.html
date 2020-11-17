@@ -1,0 +1,129 @@
+﻿<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Trouve le nombre choisi</title>
+    <style>
+      html {
+        font-family: sans-serif;
+      }
+      body {
+        width: 50%;
+        max-width: 800px;
+        min-width: 480px;
+        margin: 0 auto;
+      }
+      .lastResult {
+        color: white;
+        padding: 3px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Trouve le nombre choisi</h1>
+
+
+    <p>Un nombre entier a été choisi entre 1 et 100. Essaie de le trouver en 10 tentatives ou moins.<br>A chaque proposition, une indication de comparaison par rapport au nombre choisi sera donnée.</p>
+
+
+    <div>
+      <label for="guessField">Proposition : </label><input type="text" id="guessField" class="guessField">
+      <input type="submit" value="La soumettre" class="guessSubmit">
+    </div>
+
+
+    <div class="resultParas">
+      <p class="guesses"></p>
+      <p class="lastResult"></p>
+      <p class="lowOrHi"></p>
+    </div>
+
+
+    <script>
+      // Référence aux champs de la page :
+      //  Champs textuels
+      var guesses = document.querySelector('.guesses');
+      var lastResult = document.querySelector('.lastResult');
+      var lowOrHi = document.querySelector('.lowOrHi');
+      //  Champs de communication de données
+      var guessSubmit = document.querySelector('.guessSubmit');
+      var guessField = document.querySelector('.guessField');
+
+
+      // Variables propres à l'algorithme
+      var randomNumber = Math.floor(Math.random() * 100) + 1;
+      var guessCount = 1;
+      var resetButton;
+            
+      guessField.focus();
+           
+      function checkGuess() { //1
+        var userGuess = Number(guessField.value);
+        if (guessCount === 1) { //2
+          guesses.textContent = 'Choix précédents : ';
+        } //2
+        guesses.textContent += userGuess + ' ';
+        if (guessCount === 10) { //3
+          lastResult.textContent = '!!! PERDU !!!';
+          lastResult.style.background = 'red';
+          guessSubmit.disabled=true;
+          setGameOver();
+        } //3
+        else { //4
+          if (userGuess === randomNumber) { //5
+           lastResult.textContent = 'Bravo, vous avez trouvé le chiffre !';
+           lastResult.style.background = 'green';
+           lowOrHi.textContent = '';
+           setGameOver();
+          } //5
+          else { //6
+            if (userGuess < randomNumber) { //8
+              lowOrHi.textContent = 'Votre chiffre est trop petit.';
+            } //8
+            else { //7
+              lowOrHi.textContent = 'Votre chiffre est trop grand.';
+            } //7
+          } //6           
+        } //4
+              
+        guessField.value = '';
+        guessCount += 1;
+        guessField.focus();
+      } //1
+      guessSubmit.addEventListener('click', checkGuess);
+
+
+      function setGameOver() {
+        // Créer un bouton pour redémarrer un jeu.
+        resetButton = document.createElement('button');
+        resetButton.textContent = 'Recommencé ?';
+        document.body.appendChild(resetButton);
+        resetButton.addEventListener('click', recommence);
+      }
+
+
+      function recommence () {
+        // Effacer les rubriques textuelles précédentes.
+        // Réactiver le bouton d'envoi.
+        // Redéfinir le nombre à deviner.
+        // Mettre à zéro la variable comptant le nombre de tentative.
+        // Retirer le bouton "recommencé".
+        guesses.textContent = '';
+        lastResult.textContent = '';
+        guessField.textContent = '';
+        lowOrHi.textContent = '';
+        lastResult.style.background = 'white';
+        guessSubmit.disabled=false;
+        resetButton.parentNode.removeChild(resetButton);
+  
+        randomNumber = Math.floor(Math.random() * 100) + 1;
+        guessCount = 1;
+        guessField.focus();
+      }
+    </script>
+  </body>
+</html>
+
+
+// ----------------------------------------------------------------------- Résultat -------------------------------------------------------------------------
+en live
